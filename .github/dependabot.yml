@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Keep npm (JavaScript/TypeScript) dependencies up to date
+  - package-ecosystem: "npm"
+    directory: "/" # Root of your project where package.json is located
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    labels:
+      - "dependencies"
+      - "security"
+    ignore:
+      # Optional: ignore minor version bumps for dev tools
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "prettier"
+        update-types: ["version-update:semver-minor"]
+
+  # Keep GitHub Actions up to date
+  - package-ecosystem: "github-actions"
+    directory: "/" # Location of your workflow files (.github/workflows)
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "github-actions"
+      - "security"

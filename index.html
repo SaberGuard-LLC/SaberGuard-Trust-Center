@@ -249,6 +249,7 @@ $('#quickVersion').textContent = data.meta?.program_version || '';
 $('#quickUpdated').textContent = dt.toLocaleString(undefined, { month:'short', year:'numeric' });
 $('#quickContact').textContent = data.meta?.contact || '';
 $('#year').textContent = new Date().getFullYear();
+  
 if (data.meta?.logo_url) {
   const l=$('#navLogo');
   if (l) {
@@ -383,8 +384,3 @@ console.warn('Self-tests failed', e);
 </body>
 
 </html>
-
-
-
-
-

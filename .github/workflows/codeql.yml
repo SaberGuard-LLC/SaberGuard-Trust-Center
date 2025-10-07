@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Optional: Setup Node.js (recommended for JS/TS builds)
       - name: Setup Node.js

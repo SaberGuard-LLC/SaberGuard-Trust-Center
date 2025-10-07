@@ -249,25 +249,13 @@ $('#quickVersion').textContent = data.meta?.program_version || '';
 $('#quickUpdated').textContent = dt.toLocaleString(undefined, { month:'short', year:'numeric' });
 $('#quickContact').textContent = data.meta?.contact || '';
 $('#year').textContent = new Date().getFullYear();
-// Load logo dynamically with fallback (solo MSSP-safe)
-(() => {
-  const logoEl = document.querySelector('#navLogo');
-  if (!logoEl) return;
-
-  const orgName = data.meta?.org || 'SaberGuard';
-  const logoSrc = data.meta?.logo_url?.trim() || 'assets/logo.png?v=2';
-
-  const testImg = new Image();
-  testImg.onload = () => {
-    logoEl.src = logoSrc;
-    logoEl.alt = orgName;
-  };
-  testImg.onerror = () => {
-    logoEl.src = 'assets/logo.png?v=2';
-    logoEl.alt = orgName;
-  };
-  testImg.src = logoSrc;
-})();
+if (data.meta?.logo_url) {
+  const l=$('#navLogo');
+  if (l) {
+    l.src=data.meta.logo_url;
+    l.alt=data.meta.org || 'Logo';
+  }
+}
 
 // Status badges
 const statusWrap = $('#statusBadges');
@@ -395,6 +383,7 @@ console.warn('Self-tests failed', e);
 </body>
 
 </html>
+
 
 
 

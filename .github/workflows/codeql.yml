@@ -1,0 +1,64 @@
+name: "CodeQL Advanced"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '29 7 * * 4' # Weekly scan (Thursdays at 07:29 UTC)
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  packages: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: javascript-typescript
+            build-mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Optional: Setup Node.js (recommended for JS/TS builds)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Optional: install dependencies if needed for CodeQL to understand the structure
+      - name: Install dependencies
+        if: matrix.build-mode == 'none'
+        run: |
+          if [ -f package-lock.json ] || [ -f yarn.lock ]; then
+            npm ci || yarn install --frozen-lockfile
+          fi
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          # Add extended security queries for deeper analysis
+          queries: +security-extended,security-and-quality
+
+      # Manual build (if needed for future compiled components)
+      - if: matrix.build-mode == 'manual'
+        shell: bash
+        run: |
+          echo "Manual build mode enabled — add your build commands below"
+          exit 1
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
